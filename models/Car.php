@@ -2,22 +2,21 @@
 
 include_once 'database/Connection.php';
 
-class Student {
-    public function __construct(
-        public string $name,
-        public string $email,
-        public string $license,
-        public int $age,
-        public int $course,
-        public string $photo,
+class Car {
+    public function __construct
+    (
+        private string $license, 
+        private string $model, 
+        private string $brand, 
+        private string $description, 
+        private string $photo,
         private PDO|null $connection = null
     )
     {
-        $this->name = $name;
-        $this->email = $email;
         $this->license = $license;
-        $this->age = $age;
-        $this->course = $course;
+        $this->model = $model;
+        $this->brand = $brand;
+        $this->description = $description;
         $this->photo = $photo;
         $this->connection = Connection::connect();
     }
@@ -28,19 +27,18 @@ class Student {
     public function store(): void
     {
         $query = 'INSERT INTO 
-            students (name, email, license, age, course, photo) 
-            VALUES (:name, :email, :license, :age, :course, :photo)
+            cars (license, model, brand, description, photo) 
+            VALUES (:license, :model, :brand, :description, :photo)
         ';
 
         try {
             $statement = $this->connection->prepare($query);
-            
+
             $statement->execute([
-                ':name' => $this->name,
-                ':email' => $this->email,
                 ':license' => $this->license,
-                ':age' => $this->age,
-                ':course' => $this->course,
+                ':model' => $this->model,
+                ':brand' => $this->brand,
+                ':description' => $this->description,
                 ':photo' => $this->photo
             ]);
         } catch(PDOException $e) {
@@ -49,28 +47,28 @@ class Student {
     }
 
     /**
-     * It updates the student's information in the database
+     * It updates the database with the new values of the object
      */
     public function update(): void
     {
-        $query = 'UPDATE students SET 
-            name = :name,
-            email = :email,
-            age = :age,
-            course = :course,
+        $query = 'UPDATE cars SET 
+            license = :license,
+            model = :model,
+            brand = :brand,
+            description = :description,
             photo = :photo
             WHERE license = :license
         ';
 
         try {
             $statement = $this->connection->prepare($query);
-            
+
             $statement->execute([
-                ':name' => $this->name,
-                ':email' => $this->email,
-                ':age' => $this->age,
-                ':course' => $this->course,
-                ':photo' => $this->photo,
+                ':license' => $this->license,
+                ':model' => $this->model,
+                ':brand' => $this->brand,
+                ':description' => $this->description,
+                ':photo' => $this->photo
             ]);
         } catch(PDOException $e) {
             echo $e->getMessage();
@@ -78,15 +76,15 @@ class Student {
     }
 
     /**
-     * It deletes the student from the database
+     * It deletes the car from the database
      */
     public function destroy(): void
     {
-        $query = 'DELETE FROM students WHERE license = :license';
+        $query = 'DELETE FROM cars WHERE license = :license';
 
         try {
             $statement = $this->connection->prepare($query);
-            
+
             $statement->execute([
                 ':license' => $this->license
             ]);
@@ -96,20 +94,20 @@ class Student {
     }
 
     /**
-     * It receives a license as a parameter, and returns a Student object if the license exists in the
-     * database, or null if it doesn't
+     * It takes a license plate as a parameter, and returns a Car object if it finds one, or null if it
+     * doesn't
      * 
-     * @param string license The license of the student you want to find.
+     * @param string license The license plate of the car.
      * 
-     * @return ?Student The student object
+     * @return Car|null The car object
      */
-    public static function find(string $license): ?Student
+    public static function find(string $license): Car|null
     {
-        $query = 'SELECT * FROM students WHERE license = :license';
+        $query = 'SELECT * FROM cars WHERE license = :license';
 
         try {
             $statement = $this->connection->prepare($query);
-            
+
             $statement->execute([
                 ':license' => $license
             ]);
@@ -117,12 +115,11 @@ class Student {
             $result = $statement->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
-                return new Student(
-                    $result['name'],
-                    $result['email'],
+                return new Car(
                     $result['license'],
-                    $result['age'],
-                    $result['course'],
+                    $result['model'],
+                    $result['brand'],
+                    $result['description'],
                     $result['photo']
                 );
             }
@@ -134,17 +131,17 @@ class Student {
     }
 
     /**
-     * It returns an array of all the students in the database
+     * It returns an array of all the cars in the database
      * 
-     * @return array An array of all the students in the database.
+     * @return array An array of all the cars in the database.
      */
     public static function all(): array
     {
-        $query = 'SELECT * FROM students';
+        $query = 'SELECT * FROM cars';
 
         try {
             $statement = $this->connection->prepare($query);
-            
+
             $statement->execute();
 
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -160,28 +157,28 @@ class Student {
     }
 
     /**
-     * It takes a string as an argument, and returns an array of students that match the query
+     * It searches for cars in the database by license, model or brand
      * 
-     * @param string query The query to be executed.
+     * @param string search The search term.
      * 
-     * @return array An array of associative arrays.
+     * @return array An array of cars that match the search criteria.
      */
-    public static function search(string $query): array
+    public static function search(string $search): array
     {
-        $query = 'SELECT * FROM
-            students WHERE 
-            name LIKE :query
-            OR
-            email LIKE :query
-            OR
-            license LIKE :query
+        $query = 'SELECT * FROM 
+            cars WHERE 
+            license LIKE :search 
+            OR 
+            model LIKE :search 
+            OR 
+            brand LIKE :search
         ';
 
         try {
-            $statement = $this->connection->prepare($query);
-            
+            $statement = Connection::connect()->prepare($query);
+
             $statement->execute([
-                ':query' => '%' . $query . '%'
+                ':search' => '%' . $search . '%'
             ]);
 
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
