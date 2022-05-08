@@ -35,6 +35,8 @@
                     <h5 class="text-muted">Rellene el formulario con los datos de estudiante</h5>
 
                     <form action="store.php" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="module" value="Student">
+
                         <label for="email">Correo</label>
                         <div class="input-group">
                           <span class="input-group-text">

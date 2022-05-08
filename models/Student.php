@@ -5,12 +5,12 @@ include_once 'database/Connection.php';
 class Student {
 
     public function __construct(
-        public string $name,
-        public string $email,
-        public string $license,
-        public int $age,
-        public int $course,
-        public string $photo,
+        public string $name = '',
+        public string $email = '',
+        public string $license = '',
+        public int $age = 0,
+        public int $course = 0,
+        public string $photo = '',
     ) { }
 
     /**
