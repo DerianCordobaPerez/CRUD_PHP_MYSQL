@@ -15,7 +15,7 @@ class Connection {
     {
         try {
             if (static::$connection === null) {
-                static::$connection = new PDO('mysql:host=localhost;dbname=test', 'root', '');
+                static::$connection = new PDO('mysql:host=localhost;dbname=practica_04', 'derian', 'derian2022');
                 
                 static::$connection
                     ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

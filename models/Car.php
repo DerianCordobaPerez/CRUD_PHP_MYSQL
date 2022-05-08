@@ -5,21 +5,12 @@ include_once 'database/Connection.php';
 class Car {
     public function __construct
     (
-        private string $license, 
-        private string $model, 
-        private string $brand, 
-        private string $description, 
-        private string $photo,
-        private PDO|null $connection = null
-    )
-    {
-        $this->license = $license;
-        $this->model = $model;
-        $this->brand = $brand;
-        $this->description = $description;
-        $this->photo = $photo;
-        $this->connection = Connection::connect();
-    }
+        public string $license,
+        public string $model,
+        public string $brand,
+        public string $description,
+        public string $photo,
+    ) { }
 
     /**
      * It takes the values of the properties of the object and inserts them into the database
@@ -27,12 +18,12 @@ class Car {
     public function store(): void
     {
         $query = 'INSERT INTO 
-            cars (license, model, brand, description, photo) 
+            Cars (license, model, brand, description, photo) 
             VALUES (:license, :model, :brand, :description, :photo)
         ';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
 
             $statement->execute([
                 ':license' => $this->license,
@@ -51,7 +42,7 @@ class Car {
      */
     public function update(): void
     {
-        $query = 'UPDATE cars SET 
+        $query = 'UPDATE Cars SET 
             license = :license,
             model = :model,
             brand = :brand,
@@ -61,7 +52,7 @@ class Car {
         ';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
 
             $statement->execute([
                 ':license' => $this->license,
@@ -80,10 +71,10 @@ class Car {
      */
     public function destroy(): void
     {
-        $query = 'DELETE FROM cars WHERE license = :license';
+        $query = 'DELETE FROM Cars WHERE license = :license';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
 
             $statement->execute([
                 ':license' => $this->license
@@ -103,10 +94,10 @@ class Car {
      */
     public static function find(string $license): Car|null
     {
-        $query = 'SELECT * FROM cars WHERE license = :license';
+        $query = 'SELECT * FROM Cars WHERE license = :license';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
 
             $statement->execute([
                 ':license' => $license
@@ -137,10 +128,10 @@ class Car {
      */
     public static function all(): array
     {
-        $query = 'SELECT * FROM cars';
+        $query = 'SELECT * FROM Cars';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
 
             $statement->execute();
 
@@ -166,7 +157,7 @@ class Car {
     public static function search(string $search): array
     {
         $query = 'SELECT * FROM 
-            cars WHERE 
+            Cars WHERE 
             license LIKE :search 
             OR 
             model LIKE :search 

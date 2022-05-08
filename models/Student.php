@@ -3,6 +3,7 @@
 include_once 'database/Connection.php';
 
 class Student {
+
     public function __construct(
         public string $name,
         public string $email,
@@ -10,17 +11,7 @@ class Student {
         public int $age,
         public int $course,
         public string $photo,
-        private PDO|null $connection = null
-    )
-    {
-        $this->name = $name;
-        $this->email = $email;
-        $this->license = $license;
-        $this->age = $age;
-        $this->course = $course;
-        $this->photo = $photo;
-        $this->connection = Connection::connect();
-    }
+    ) { }
 
     /**
      * It takes the values of the properties of the object and inserts them into the database
@@ -28,12 +19,12 @@ class Student {
     public function store(): void
     {
         $query = 'INSERT INTO 
-            students (name, email, license, age, course, photo) 
+            Students (name, email, license, age, course, photo) 
             VALUES (:name, :email, :license, :age, :course, :photo)
         ';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
             
             $statement->execute([
                 ':name' => $this->name,
@@ -53,7 +44,7 @@ class Student {
      */
     public function update(): void
     {
-        $query = 'UPDATE students SET 
+        $query = 'UPDATE Students SET 
             name = :name,
             email = :email,
             age = :age,
@@ -63,7 +54,7 @@ class Student {
         ';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
             
             $statement->execute([
                 ':name' => $this->name,
@@ -71,6 +62,7 @@ class Student {
                 ':age' => $this->age,
                 ':course' => $this->course,
                 ':photo' => $this->photo,
+                ':license' => $this->license
             ]);
         } catch(PDOException $e) {
             echo $e->getMessage();
@@ -82,10 +74,10 @@ class Student {
      */
     public function destroy(): void
     {
-        $query = 'DELETE FROM students WHERE license = :license';
+        $query = 'DELETE FROM Students WHERE license = :license';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
             
             $statement->execute([
                 ':license' => $this->license
@@ -105,10 +97,10 @@ class Student {
      */
     public static function find(string $license): ?Student
     {
-        $query = 'SELECT * FROM students WHERE license = :license';
+        $query = 'SELECT * FROM Students WHERE license = :license';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
             
             $statement->execute([
                 ':license' => $license
@@ -140,10 +132,10 @@ class Student {
      */
     public static function all(): array
     {
-        $query = 'SELECT * FROM students';
+        $query = 'SELECT * FROM Students';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
             
             $statement->execute();
 
@@ -166,10 +158,10 @@ class Student {
      * 
      * @return array An array of associative arrays.
      */
-    public static function search(string $query): array
+    public static function search(string $search): array
     {
         $query = 'SELECT * FROM
-            students WHERE 
+            Students WHERE 
             name LIKE :query
             OR
             email LIKE :query
@@ -178,10 +170,10 @@ class Student {
         ';
 
         try {
-            $statement = $this->connection->prepare($query);
+            $statement = Connection::connect()->prepare($query);
             
             $statement->execute([
-                ':query' => '%' . $query . '%'
+                ':query' => '%' . $search . '%'
             ]);
 
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
