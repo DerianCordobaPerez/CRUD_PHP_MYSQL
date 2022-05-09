@@ -30,74 +30,15 @@
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                  data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-
-                    <h3 class="fw-bold">Agregar Estudiante</h3>
-                    <h5 class="text-muted">Rellene el formulario con los datos de estudiante</h5>
-
-                    <form action="store.php" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="module" value="Student">
-
-                        <label for="email">Correo</label>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <span class="fw-bold">@</span>
-                          </span>
-                            <input class="form-control" type="email" name="email" placeholder="Correo" required>
+                    <div class="row">
+                        <div class="col-md-6 border-end">
+                            <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/views/student/create.php'; ?>
                         </div>
 
-                        <label for="name">Nombre</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fw-bold far fa-user" aria-hidden="true"></i>
-                            </span>
-                            <input class="form-control" type="text" name="name" maxlength="200" placeholder="Nombre"
-                                   required>
+                        <div class="col-md-6">
+                            <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/views/car/create.php'; ?>
                         </div>
-
-
-                        <label for="carnet">Carnet</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fw-bold far fa-id-card" aria-hidden="true"></i>
-                            </span>
-                            <input class="form-control" type="text" name="license" maxlength="10" placeholder="Carnet"
-                                   required>
-                        </div>
-
-                        <label for="edad">Edad</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <span class="fw-bold">18</span>
-                            </span>
-                            <input class="form-control" type="number" name="age" min="15" max="50" placeholder="Edad"
-                                   required>
-                        </div>
-
-                        <label for="curso">Curso</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fw-bold fas fa-graduation-cap" aria-hidden="true"></i>
-                            </span>
-
-                            <input class="form-control" type="number" name="course" min="1" max="5" placeholder="Curso"
-                                   required>
-                        </div>
-
-                        <label for="foto">Foto</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fw-bold fas fa-images" aria-hidden="true"></i>
-                            </span>
-                            <input class="form-control" type="file" name="photo" required>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <div class="input-group">
-                                <input class="btn btn-primary my-2 button-width" type="submit" name="send"
-                                       value="Enviar">
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -126,78 +67,14 @@
                         </div>
                     </div>
 
-                    <div class="row my-2">
-                        <form class="d-flex justify-content-end gap-2" method="get">
-                            <input class="form-control" type="search" name="search" id="search" placeholder="Buscar por nombre, carnet o email">
-
-                            <button class="btn btn-primary btn-sm" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
-                    </div>
-
                     <?php
-                    include_once 'models/Student.php';
+                        include_once $_SERVER['DOCUMENT_ROOT'] . '/views/student/index.php';
+                        include_once $_SERVER['DOCUMENT_ROOT'] . '/views/car/index.php';
+                        showStudents();
 
-                    if(isset($_GET['search'])) {
-                        $students = Student::search($_GET['search']);
-                    } else {
-                        $students = Student::all();
-                    }
+                        echo '<hr>';
 
-                    if (count($students) > 0) {
-                        foreach ($students as $student) {
-                            echo '<div class="row">';
-                            echo '<div class="col-md-4">';
-                            echo '<div class="d-grid gap-2">';
-                            echo '<div class="image-shadow">';
-                            echo '<img class="rounded mx-auto d-block image" src="pictures/' . $student['photo'] . '" alt="' . $student['name'] . '">';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-
-                            echo '<div class="col-md-4">';
-                            echo '<p class="text">';
-                            echo '<span class="fw-bold">Nombre: </span>';
-                            echo $student['name'];
-                            echo '</p>';
-
-                            echo '<p class="text">';
-                            echo '<span class="fw-bold">Email: </span>';
-                            echo $student['email'];
-                            echo '</p>';
-
-                            echo '<p class="text">';
-                            echo '<span class="fw-bold">Edad: </span>';
-                            echo $student['age'];
-                            echo '</p>';
-
-                            echo '<p class="text">';
-                            echo '<span class="fw-bold">Carnet: </span>';
-                            echo $student['license'];
-                            echo '</p>';
-
-                            echo '<p class="text">';
-                            echo '<span class="text-strong">Curso: </span>';
-                            echo $student['course'];
-                            echo '</p>';
-                            echo '</div>';
-
-                            echo '<div class="col-md-4">';
-
-                            echo "<div class='d-flex gap-4'>";
-                            echo '<a class="btn btn-warning btn-sm" href="edit.php?license=' . $student['license'] . '">Editar</a>';
-
-                            echo '<a class="btn btn-danger btn-sm" href="delete.php?license=' . $student['license'] . '">Eliminar</a>';
-                            echo '</div>';
-                            echo '</div>';
-
-                            echo '</div>';
-
-                        }
-                    } else {
-                        echo "<p class='text-muted'>No hay alumnos agregados</p>";
-                    }
+                        showCars();
                     ?>
                 </div>
             </div>

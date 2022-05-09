@@ -1,15 +1,15 @@
 <?php
 
-include_once 'database/Connection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/Connection.php';
 
 class Car {
     public function __construct
     (
-        public string $license,
-        public string $model,
-        public string $brand,
-        public string $description,
-        public string $photo,
+        public string $license = '',
+        public string $model = '',
+        public string $brand = '',
+        public string $description = '',
+        public string $photo = '',
     ) { }
 
     /**
@@ -43,7 +43,6 @@ class Car {
     public function update(): void
     {
         $query = 'UPDATE Cars SET 
-            license = :license,
             model = :model,
             brand = :brand,
             description = :description,
@@ -59,7 +58,7 @@ class Car {
                 ':model' => $this->model,
                 ':brand' => $this->brand,
                 ':description' => $this->description,
-                ':photo' => $this->photo
+                ':photo' => $this->photo,
             ]);
         } catch(PDOException $e) {
             echo $e->getMessage();

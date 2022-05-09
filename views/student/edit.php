@@ -1,5 +1,5 @@
 <?php
-include_once 'models/Student.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/models/Student.php';
 $student = Student::find($_GET['license']);
 
 if(!$student) {
@@ -15,16 +15,18 @@ if(!$student) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="public/css/index.css">
+    <link rel="stylesheet" href="/public/css/index.css">
     <title>Editar alumno</title>
 </head>
 
 <body>
 <div class="container bg-light my-4 p-2 shadow rounded">
-    <h3 class="fw-bold">Agregar Estudiante</h3>
+    <h3 class="fw-bold">Editar Estudiante</h3>
     <h5 class="text-muted">Rellene el formulario con los datos de estudiante</h5>
 
-    <form action="update.php" method="post" enctype="multipart/form-data">
+    <form action="/update.php" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="module" value="Student">
+
         <label for="email">Correo</label>
         <div class="input-group">
         <span class="input-group-text">
@@ -46,7 +48,7 @@ if(!$student) {
         <span class="input-group-text">
           <i class="fw-bold far fa-id-card" aria-hidden="true"></i>
         </span>
-            <input class="form-control" type="text" name="license" value="<?php echo $student->license; ?>" maxlength="10" placeholder="Carnet" readonly>
+            <input class="form-control" type="text" name="find" value="<?php echo $student->license; ?>" maxlength="10" placeholder="Carnet" readonly>
         </div>
 
         <label for="age">Edad</label>

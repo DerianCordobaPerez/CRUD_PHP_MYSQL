@@ -1,6 +1,6 @@
 <?php
 
-include_once 'database/Connection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/Connection.php';
 
 class Student {
 

@@ -12,7 +12,7 @@ class Image
             }
         }
 
-        if(file_exists('pictures/'.basename($_FILES['photo']['name']))) {
+        if(file_exists($_SERVER['DOCUMENT_ROOT'] . '/pictures/'.basename($_FILES['photo']['name']))) {
             echo "Error, la iamgen ingresada ya existe";
             $action = false;
         }
